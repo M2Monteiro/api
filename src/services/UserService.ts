@@ -1,13 +1,15 @@
 import { v4 as uuidv4 } from "uuid";
 import { UserRepository } from "../repositories/UserRepository";
-import { User } from "../models/User";
+
 import UserTypeError from "../utils/error/UserTypeError";
+import { User } from "../entities/User";
+import { hashPassword } from "../utils/bcrypt/HashPassword";
 
 export class UserService {
   static async register(
     name: string,
     email: string,
-    password_hash: string
+    password: string
   ): Promise<User> {
     const existingEmail = await UserRepository.findByEmail(email);
 
@@ -15,7 +17,15 @@ export class UserService {
       throw new UserTypeError("E-mail already exists");
     }
 
-    const newUser: User = { id: uuidv4(), name, email, password_hash };
+    const password_hash = await hashPassword(password);
+
+    const newUser: User = new User();
+
+    // newUser.id = uuidv4();
+    newUser.name = name;
+    newUser.email = email;
+    newUser.password_hash = password_hash;
+
     return UserRepository.create(newUser);
   }
 }

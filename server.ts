@@ -1,7 +1,15 @@
+import { config } from "./config";
+
 import app from "./src/app";
+import { AppDataSource } from "./src/database/connection";
 
-const PORT = process.env.PORT;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+AppDataSource.initialize()
+  .then(() => {
+    app.listen(config.API_PORT, () => {
+      console.log(`Server is running on port ${config.API_PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error(error)
+  });

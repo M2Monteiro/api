@@ -1,3 +1,5 @@
+import { config } from "../../config";
+
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
@@ -13,7 +15,7 @@ export const authenticateToken = (
     return response.status(401);
   }
 
-  jwt.verify(token, process.env.JWT_SECRET as string, (err: any, user: any) => {
+  jwt.verify(token, config.JWT_SECRET as string, (err: any, user: any) => {
     if (err) {
       return response.status(403);
     }
