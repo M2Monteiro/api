@@ -1,31 +1,46 @@
-import { v4 as uuidv4 } from "uuid";
+import jwt from "jsonwebtoken";
 import { UserRepository } from "../repositories/UserRepository";
 
 import UserTypeError from "../utils/error/UserTypeError";
+import { hashCompare, hashPassword } from "../utils/bcrypt/HashPassword";
+import { UserDTO } from "../dtos/UserDTO";
+import { config } from "../../config";
 import { User } from "../entities/User";
-import { hashPassword } from "../utils/bcrypt/HashPassword";
 
 export class UserService {
-  static async register(
-    name: string,
-    email: string,
-    password: string
-  ): Promise<User> {
-    const existingEmail = await UserRepository.findByEmail(email);
+  static async register(userDto: UserDTO): Promise<User> {
+    const existingEmail = await UserRepository.findByEmail(userDto.email);
 
     if (existingEmail) {
       throw new UserTypeError("E-mail already exists");
     }
 
-    const password_hash = await hashPassword(password);
+    const password_hash = await hashPassword(userDto.password);
 
-    const newUser: User = new User();
+    const user: UserDTO = {
+      ...userDto,
+      password: password_hash,
+    };
 
-    // newUser.id = uuidv4();
-    newUser.name = name;
-    newUser.email = email;
-    newUser.password_hash = password_hash;
+    return UserRepository.create(user);
+  }
 
-    return UserRepository.create(newUser);
+  static async login(userDto: UserDTO): Promise<string> {
+    const user = await UserRepository.findUserByEmail(userDto.email);
+
+    if (!user) {
+      throw new UserTypeError("User not exist");
+    }
+    
+    if (!(await hashCompare(userDto.password, user[0].password_hash!))) {
+      throw new UserTypeError("E-mail or Password is invalid");
+    }
+
+    const accessToken = jwt.sign(
+      JSON.parse(JSON.stringify(user[0])),
+      config.JWT_SECRET as string
+    );
+
+    return accessToken;
   }
 }
