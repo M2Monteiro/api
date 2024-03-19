@@ -1,15 +1,19 @@
 import jwt from "jsonwebtoken";
-import { UserRepository } from "../repositories/UserRepository";
+import { inject, injectable } from "inversify";
+import { config } from "../../config";
 
-import UserTypeError from "../utils/error/UserTypeError";
+import { UserRepository } from "../repositories/UserRepository";
 import { hashCompare, hashPassword } from "../utils/bcrypt/HashPassword";
 import { UserDTO } from "../dtos/UserDTO";
-import { config } from "../../config";
 import { User } from "../entities/User";
+import UserTypeError from "../utils/error/UserTypeError";
 
+@injectable()
 export class UserService {
-  static async register(userDto: UserDTO): Promise<User> {
-    const existingEmail = await UserRepository.findByEmail(userDto.email);
+  constructor(@inject(UserRepository) private userRepository: UserRepository) {}
+
+  public async register(userDto: UserDTO): Promise<User> {
+    const existingEmail = await this.userRepository.findByEmail(userDto.email);
 
     if (existingEmail) {
       throw new UserTypeError("E-mail already exists");
@@ -22,16 +26,16 @@ export class UserService {
       password: password_hash,
     };
 
-    return UserRepository.create(user);
+    return this.userRepository.create(user);
   }
 
-  static async login(userDto: UserDTO): Promise<string> {
-    const user = await UserRepository.findUserByEmail(userDto.email);
+  public async login(userDto: UserDTO): Promise<string> {
+    const user = await this.userRepository.findUserByEmail(userDto.email);
 
     if (!user) {
       throw new UserTypeError("User not exist");
     }
-    
+
     if (!(await hashCompare(userDto.password, user[0].password_hash!))) {
       throw new UserTypeError("E-mail or Password is invalid");
     }

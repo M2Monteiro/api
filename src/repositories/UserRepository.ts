@@ -1,9 +1,11 @@
+import { injectable } from "inversify";
 import { AppDataSource } from "../database/connection";
+
 import { UserDTO } from "../dtos/UserDTO";
 import { User } from "../entities/User";
-
+@injectable()
 export class UserRepository {
-  static async findUserByEmail(email: string): Promise<User[] | null> {
+  public async findUserByEmail(email: string): Promise<User[] | null> {
     return AppDataSource.getRepository(User).find({
       select: {
         name: true,
@@ -16,7 +18,7 @@ export class UserRepository {
     });
   }
 
-  static async findByEmail(email: string): Promise<User | null> {
+  public async findByEmail(email: string): Promise<User | null> {
     const userRepository = AppDataSource.getRepository(User);
 
     return userRepository.findOneBy({
@@ -24,7 +26,7 @@ export class UserRepository {
     });
   }
 
-  static async create(userDTO: UserDTO): Promise<User> {
+  public async create(userDTO: UserDTO): Promise<User> {
     const newUser: User = new User();
 
     newUser.name = userDTO.name!;

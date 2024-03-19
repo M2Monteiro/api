@@ -1,10 +1,15 @@
-import { UserDTO } from "./../dtos/UserDTO";
+import { inject, injectable } from "inversify";
 import { Request, Response } from "express";
+
+import { UserDTO } from "./../dtos/UserDTO";
 import { UserService } from "../services/UserService";
 import UserTypeError from "../utils/error/UserTypeError";
 
+@injectable()
 export class UserController {
-  static async register(request: Request, response: Response) {
+  constructor(@inject(UserService) private userService: UserService) {}
+
+  public async register(request: Request, response: Response) {
     const { name, email, password } = request.body;
 
     try {
@@ -14,7 +19,7 @@ export class UserController {
         password,
       };
 
-      const newUser = await UserService.register(userDTO);
+      const newUser = await this.userService.register(userDTO);
       return response.status(201).json(newUser);
     } catch (error) {
       if (error instanceof UserTypeError) {
@@ -24,7 +29,7 @@ export class UserController {
     }
   }
 
-  static async login(request: Request, response: Response) {
+  public async login(request: Request, response: Response) {
     const { email, password } = request.body;
 
     try {
@@ -33,7 +38,7 @@ export class UserController {
         password,
       };
 
-      const accessToken = await UserService.login(userDTO);
+      const accessToken = await this.userService.login(userDTO);
 
       return response.status(200).json({ token: accessToken });
     } catch (error) {

@@ -1,8 +1,8 @@
+import "reflect-metadata";
 import { config } from "./config";
 
 import app from "./src/app";
 import { AppDataSource } from "./src/database/connection";
-
 
 AppDataSource.initialize()
   .then(() => {
@@ -11,5 +11,5 @@ AppDataSource.initialize()
     });
   })
   .catch((error) => {
-    console.error(error)
+    console.error(error);
   });
