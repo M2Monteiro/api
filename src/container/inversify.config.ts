@@ -1,7 +1,7 @@
 import { Container } from "inversify";
-import { UserService } from "./services/UserService";
-import { UserRepository } from "./repositories/UserRepository";
-import { UserController } from "./controller/UserController";
+import { UserService } from "@services/UserService";
+import { UserRepository } from "@repositories/UserRepository";
+import { UserController } from "@controller/UserController";
 
 const container = new Container();
 

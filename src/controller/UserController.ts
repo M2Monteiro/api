@@ -1,9 +1,9 @@
 import { inject, injectable } from "inversify";
 import { Request, Response } from "express";
 
-import { UserDTO } from "./../dtos/UserDTO";
-import { UserService } from "../services/UserService";
-import UserTypeError from "../utils/error/UserTypeError";
+import { UserDTO } from "@dtos/UserDTO";
+import { UserService } from "@services/UserService";
+import UserTypeError from "@utils/error/UserTypeError";
 
 @injectable()
 export class UserController {

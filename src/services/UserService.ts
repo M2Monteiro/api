@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken";
+import { config } from "@config/index";
 import { inject, injectable } from "inversify";
-import { config } from "../../config";
 
-import { UserRepository } from "../repositories/UserRepository";
-import { hashCompare, hashPassword } from "../utils/bcrypt/HashPassword";
-import { UserDTO } from "../dtos/UserDTO";
-import { User } from "../entities/User";
-import UserTypeError from "../utils/error/UserTypeError";
+import { UserRepository } from "@repositories/UserRepository";
+import { hashCompare, hashPassword } from "@utils/bcrypt/HashPassword";
+import { UserDTO } from "@dtos/UserDTO";
+import { User } from "@entities/User";
+import UserTypeError from "@utils/error/UserTypeError";
 
 @injectable()
 export class UserService {

@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
-import { AppDataSource } from "../database/connection";
+import { AppDataSource } from "@database/connection";
 
-import { UserDTO } from "../dtos/UserDTO";
-import { User } from "../entities/User";
+import { UserDTO } from "@dtos/UserDTO";
+import { User } from "@entities/User";
 @injectable()
 export class UserRepository {
   public async findUserByEmail(email: string): Promise<User[] | null> {

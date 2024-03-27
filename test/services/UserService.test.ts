@@ -1,14 +1,13 @@
-// import "@types/jest";
 import { describe } from "node:test";
 import jwt from "jsonwebtoken";
 
-import { UserService } from "../../src/services/UserService";
-import { UserRepository } from "../../src/repositories/UserRepository";
-import { hashPassword, hashCompare } from "../../src/utils/bcrypt/HashPassword";
-import { UserDTO } from "../../src/dtos/UserDTO";
+import { UserService } from "@services/UserService";
+import { UserRepository } from "@repositories/UserRepository";
+import { hashPassword, hashCompare } from "@utils/bcrypt/HashPassword";
+import { UserDTO } from "@dtos/UserDTO";
 
-jest.mock("../../src/repositories/UserRepository");
-jest.mock("../../src/utils/bcrypt/HashPassword");
+jest.mock("@repositories/UserRepository");
+jest.mock("@utils/bcrypt/HashPassword");
 jest.mock("jsonwebtoken");
 
 describe("UserService", () => {

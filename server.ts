@@ -1,8 +1,8 @@
 import "reflect-metadata";
-import { config } from "./config";
+import { config } from "@config/index";
 
-import app from "./src/app";
-import { AppDataSource } from "./src/database/connection";
+import app from "@src/app";
+import { AppDataSource } from "@src/database/connection";
 
 AppDataSource.initialize()
   .then(() => {
